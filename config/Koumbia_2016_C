@@ -1,0 +1,141 @@
+################################################################################################
+#                                           Chain
+################################################################################################
+
+chain:
+{
+	executionMode: 'sequential'
+	outputPath:'/home/raffaele/Data/Iota2/Koumbia/2016/Output_5'
+	jobsPath:'None'
+	pyAppPath:'/home/raffaele/Chaines/iota2mtd/scripts/common'
+	chainName:'Koumbia_2016_C'
+	nomenclaturePath:'/home/raffaele/Data/Iota2/Koumbia/2016/ReferenceData/GT_FINAL_nomenclature_C.csv'
+	outputStatistics:'True'
+
+	listTile:'T30PVT'
+	featuresPath:'/home/raffaele/Data/Iota2/Koumbia/2016/FEAT'
+	L5Path:'None'
+	L8Path:'None'
+	S2Path:'/home/raffaele/Data/Iota2/Koumbia/2016/S2'
+	S1Path:'None'
+	userFeatPath:'None'
+
+	mode:'one_region' #one_region or multi_regions or outside
+	regionPath:'/home/raffaele/Data/Iota2/Koumbia/2016/REGION/Koumbia_reg.shp'
+	regionField:'region'
+	model:'/home/raffaele/Data/Iota2/Koumbia/2016/REGION/Basic1tile.txt'
+
+	groundTruth:'/home/raffaele/Data/Iota2/Koumbia/2016/ReferenceData/GT_FINAL.shp'
+	dataField:'Code_C'
+	runs:'1'
+	ratio:'0.7'
+	cloud_threshold:'1'
+	spatialResolution:'10'
+
+	logPath:'/home/raffaele/Data/Iota2/Koumbia/2016/LOG'
+	colorTable:'/home/raffaele/Data/Iota2/Koumbia/2016/ReferenceData/GT_FINAL_colormap_C.txt'
+	mode_outside_RegionSplit:'' #square km
+
+	OTB_HOME:'/opt/otb'
+}
+
+################################################################################################
+#                                           training
+################################################################################################
+
+argTrain:
+{
+	shapeMode : 'polygons' #polygons or points
+	samplesOptions:'-sampler random -strategy constant -strategy.constant.nb 2 '
+
+	classifier :'rf'
+	options :' -classifier.rf.min 5 -classifier.rf.max 25 -sample.mt 1000 -sample.mv 0 -sample.bm 0 -sample.vtr 0'
+	rearrangeModelTile:False #True or False
+	rearrangeModelTile_out:''
+
+	cropMix:'False'
+	prevFeatures:'/ptmp/vincenta/TestCropMix/2013'
+	annualCrop:['11','12']
+	ACropLabelReplacement:['10','annualCrop']
+	samplesClassifMix:'True'
+  	configClassif:'/path/to/theConfigurationFileWhichRuleAPreviousClassification'
+ 	validityThreshold : '5'
+}
+
+################################################################################################
+#                                        classifications
+################################################################################################
+
+argClassification:
+{
+	classifMode :'separate' #fusion or separate
+	fusionOptions :'-nodatalabel 0 -method majorityvoting'
+	pixType : 'uint16'
+	confusionModel : False #True or False
+	noLabelManagement : 'maxConfidence' #maxConfidence or learningPriority
+}
+
+################################################################################################
+#                                           sensors
+################################################################################################
+Landsat8:
+{
+	nodata_Mask : "False"
+	nativeRes : 30
+	arbo : "/*/*"
+	imtype : "ORTHO_SURF_CORR_PENTE*.TIF"
+	nuages : "NUA.TIF"
+	saturation : "SAT.TIF"
+	div : "DIV.TIF"
+	nodata : ""
+	arbomask : "*/*/MASK/"
+	startDate:''
+	endDate:''
+	temporalResolution:'16'
+}
+Landsat5:
+{
+	nodata_Mask : "False"
+	nativeRes : 30
+	arbo : "/*/*"
+	imtype : "ORTHO_SURF_CORR_PENTE*.TIF"
+	nuages : "NUA.TIF"
+	saturation : "SAT.TIF"
+	div : "DIV.TIF"
+	nodata : ""
+	arbomask : "*/*/MASK/"
+	startDate:''
+	endDate:''
+	temporalResolution:'16'
+}
+Sentinel_2:
+{
+    nodata_Mask : "False"
+    nativeRes : 10
+    arbo : "/*/*"
+    imtype : "FRE_STACK.tif"
+    nuages : "CLM_R1*.tif"
+    saturation : "SAT_R1*.tif"
+    div : "EDG_R1*.tif"
+    nodata : ""
+    arbomask : "/*/MASKS/"
+    temporalResolution:'10'
+    nuages_reproj : "CLM_R1*.tif"
+    saturation_reproj : "SAT_R1*.tif"
+    div_reproj : "EDG_R1*.tif"
+}
+userFeat:
+{
+    arbo:""
+    patterns:""
+}
+GlobChain:
+{
+    proj : "EPSG:32630"
+    features: ["NDVI","NDWI","Brightness"]
+    nbLook:1
+    batchProcessing : 'False'
+    autoDate:'True'
+    bindingPython:'False'
+}
+################################################################################################
